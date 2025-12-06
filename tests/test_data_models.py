@@ -2,7 +2,7 @@
 
 import pytest
 from datetime import datetime
-from luma_cog.data_models import Subscription, ChannelGroup, LumaConfig
+from luma.data_models import Subscription, ChannelGroup, LumaConfig
 
 
 class TestSubscription:

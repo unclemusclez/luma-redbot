@@ -166,7 +166,7 @@ def sample_events():
 @pytest.fixture
 def sample_subscription():
     """Create a sample subscription for testing."""
-    from luma_cog.data_models import Subscription
+    from luma.data_models import Subscription
 
     return Subscription(**MOCK_SUBSCRIPTION_DATA)
 
@@ -174,7 +174,7 @@ def sample_subscription():
 @pytest.fixture
 def sample_channel_group():
     """Create a sample channel group for testing."""
-    from luma_cog.data_models import ChannelGroup
+    from luma.data_models import ChannelGroup
 
     return ChannelGroup(**MOCK_CHANNEL_GROUP_DATA)
 

@@ -7,7 +7,7 @@ from unittest.mock import Mock, AsyncMock, patch
 from datetime import datetime, timedelta
 import aiohttp
 
-from luma_cog.api_client import LumaAPIClient, LumaCacheEntry
+from luma.api_client import LumaAPIClient, LumaCacheEntry
 
 
 class TestCachePerformance:
