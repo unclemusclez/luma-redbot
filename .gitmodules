@@ -1,0 +1,3 @@
+[submodule ".docs/Red-DiscordBot"]
+	path = .docs/Red-DiscordBot
+	url = https://github.com/Cog-Creators/Red-DiscordBot.git
