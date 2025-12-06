@@ -6,7 +6,7 @@ from unittest.mock import Mock, AsyncMock, patch, MagicMock
 from datetime import datetime, timedelta
 import aiohttp
 
-from luma.api_client import (
+from luma_cog.api_client import (
     LumaAPIClient,
     LumaAPIError,
     LumaAPIRateLimitError,

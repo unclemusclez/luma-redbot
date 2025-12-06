@@ -6,9 +6,9 @@ import asyncio
 from datetime import datetime, timedelta
 import json
 
-from luma.luma import Luma
-from luma.api_client import LumaAPIClient, LumaAPITimeoutError, LumaAPINotFoundError
-from luma.data_models import Subscription, ChannelGroup
+from luma_cog.luma import Luma
+from luma_cog.api_client import LumaAPIClient, LumaAPITimeoutError, LumaAPINotFoundError
+from luma_cog.data_models import Subscription, ChannelGroup
 
 
 class TestEndToEndWorkflows:

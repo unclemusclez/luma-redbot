@@ -1,6 +1,6 @@
 [submodule ".docs/Red-DiscordBot"]
 	path = .docs/Red-DiscordBot
 	url = https://github.com/Cog-Creators/Red-DiscordBot.git
-[submodule "luma-cog"]
-	path = luma-cog
-	url = ./luma-cog
+[submodule "luma"]
+	path = luma
+	url = ./luma

@@ -6,8 +6,8 @@ from datetime import datetime
 import discord
 from redbot.core import Config, commands, checks
 
-from luma.luma import Luma
-from luma.data_models import Subscription, ChannelGroup
+from luma_cog.luma import Luma
+from luma_cog.data_models import Subscription, ChannelGroup
 
 
 class TestLumaCommands:

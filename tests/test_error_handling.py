@@ -6,8 +6,8 @@ import asyncio
 import aiohttp
 from datetime import datetime, timedelta
 
-from luma.luma import Luma
-from luma.api_client import (
+from luma_cog.luma import Luma
+from luma_cog.api_client import (
     LumaAPIClient,
     LumaAPIError,
     LumaAPIRateLimitError,
@@ -15,7 +15,7 @@ from luma.api_client import (
     LumaAPIAuthError,
     LumaAPITimeoutError,
 )
-from luma.data_models import Subscription, ChannelGroup
+from luma_cog.data_models import Subscription, ChannelGroup
 
 
 class TestAPIErrorHandling:
