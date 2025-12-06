@@ -1,0 +1,6 @@
+{
+    "author": ["Devin J. Dawson"],
+    "description": "Luma Events Cog for Red-DiscordBot - A comprehensive cog for managing Luma calendar subscriptions and displaying events across Discord channels. This cog provides seamless integration with Luma's calendar API to keep your Discord community informed about upcoming events.",
+    "install_msg": "Thanks for installing the Luma Events cog! Use `[p]luma help` to get started with setting up your calendar subscriptions.",
+    "short": "Luma calendar integration for Discord - manage and display events from Luma calendars"
+}
