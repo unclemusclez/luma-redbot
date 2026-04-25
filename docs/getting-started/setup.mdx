@@ -1,0 +1,108 @@
+---
+title: Setup Guide
+description: Configure your first subscription and channel group
+---
+
+# Setup Guide
+
+This guide walks you through setting up the Luma Events cog from scratch.
+
+## Step 1: Get a Calendar API ID
+
+Before adding a subscription, you need the Luma calendar's API ID.
+
+### Finding the API ID
+
+1. Navigate to your Luma calendar page (e.g., `https://lu.ma/genai-ny`)
+2. Open browser DevTools (F12) → Network tab
+3. Refresh the page
+4. Look for a request containing `calendar` or `event`
+5. In the response, find the `api_id` field (looks like `cal-xxxxxxxxxxxx`)
+
+Alternatively, just use the slug (`genai-ny`) - the bot can resolve it automatically.
+
+## Step 2: Add a Subscription
+
+```bash
+[p]luma subscriptions add cal-xxxxxxxxxxxx
+```
+
+The bot will automatically:
+1. Fetch calendar metadata from Luma
+2. Populate the name and slug
+3. Show calendar links (ICS and Google Calendar)
+4. Auto-sync to aggregate Google Calendar (if configured)
+
+### Example Output
+
+```
+✅ Subscription Added
+
+API ID: `cal-xxxxx`
+Slug: `genai-ny`
+Name: `Bond AI - New York`
+
+📅 Calendar Links
+ICS: https://api2.luma.com/ics/get?entity=calendar&id=cal-xxxxx
+[Add to Google Calendar](link)
+
+Google Calendar
+✅ Auto-synced to aggregate calendar
+```
+
+## Step 3: Create a Channel Group
+
+Channel groups determine where events are displayed in Discord.
+
+```bash
+[p]luma groups create "Events" #events 10
+```
+
+Parameters:
+- `"Events"` - Group name
+- `#events` - Target Discord channel
+- `10` - Maximum events to display
+
+## Step 4: Link Subscription to Group
+
+```bash
+[p]luma groups addsub "Events" cal-xxxxx
+```
+
+## Step 5: Enable Automatic Updates
+
+```bash
+# Enable updates
+[p]luma config enable
+
+# Set update interval (in hours)
+[p]luma config interval 6
+```
+
+## Step 6: Test the Setup
+
+```bash
+# View upcoming events
+[p]luma events
+
+# Manually trigger an update
+[p]luma update
+
+# Test a specific subscription
+[p]luma test cal-xxxxx
+```
+
+## Configuration Overview
+
+| Setting | Command | Description |
+|---------|---------|-------------|
+| Add subscription | `[p]luma subscriptions add <api_id>` | Add a Luma calendar |
+| Create group | `[p]luma groups create <name> <channel> <max>` | Create display group |
+| Link subscription | `[p]luma groups addsub <group> <api_id>` | Add subscription to group |
+| Enable updates | `[p]luma config enable` | Enable automatic updates |
+| Set interval | `[p]luma config interval <hours>` | Update frequency |
+
+## Next Steps
+
+- [Google Calendar Setup](../configuration/google-calendar) - Aggregate all calendars
+- [Commands Reference](../commands/subscriptions) - Full command documentation

@@ -1,0 +1,236 @@
+---
+title: Database
+description: SQLite database for event tracking
+---
+
+# Database
+
+The `EventDatabase` class manages SQLite storage for event tracking and change detection.
+
+## Module
+
+```python
+from luma.core.database import EventDatabase
+```
+
+## Class: EventDatabase
+
+SQLite database for tracking Luma events to detect changes and avoid duplicates.
+
+### Initialization
+
+```python
+db = EventDatabase(cog_instance=self)
+# or with custom path
+db = EventDatabase(db_path="/custom/path/events.db")
+```
+
+## Schema
+
+### events Table
+
+| Column | Type | Description |
+|--------|------|-------------|
+| event_api_id | TEXT | Primary key |
+| calendar_api_id | TEXT | Parent calendar |
+| name | TEXT | Event name |
+| start_at | TEXT | Start datetime (ISO) |
+| end_at | TEXT | End datetime (ISO) |
+| timezone | TEXT | Event timezone |
+| url | TEXT | Event URL slug |
+| last_modified | TEXT | Last update time |
+| created_at | TEXT | Insert time |
+| updated_at | TEXT | Update time |
+
+### event_history Table
+
+| Column | Type | Description |
+|--------|------|-------------|
+| id | INTEGER | Primary key |
+| event_api_id | TEXT | Foreign key |
+| guild_id | INTEGER | Discord guild |
+| channel_id | INTEGER | Discord channel |
+| sent_at | TEXT | Send timestamp |
+
+## Methods
+
+### upsert_events
+
+Insert or update events, returning change stats.
+
+```python
+async def upsert_events(
+    self,
+    events: List[Dict[str, Any]],
+    calendar_api_id: str
+) -> Dict[str, Any]
+```
+
+**Returns:**
+```python
+{
+    "new_events": int,
+    "updated_events": int,
+    "deleted_events": int,
+    "total_events": int,
+    "new_event_data": List[Dict],  # Actual new event data
+}
+```
+
+**Example:**
+```python
+event_dicts = [
+    {
+        "api_id": "evt-xxxxx",
+        "calendar_api_id": "cal-xxxxx",
+        "name": "My Event",
+        "start_at": "2026-04-20T18:00:00Z",
+        "end_at": "2026-04-20T20:00:00Z",
+        "timezone": "America/New_York",
+        "url": "evt-xxxxx",
+    }
+]
+
+result = await db.upsert_events(event_dicts, "cal-xxxxx")
+print(f"New: {result['new_events']}, Updated: {result['updated_events']}")
+```
+
+### get_tracked_events
+
+Get all tracked events for a calendar.
+
+```python
+async def get_tracked_events(
+    self,
+    calendar_api_id: str
+) -> List[Dict[str, Any]]
+```
+
+**Returns:** List of event dicts
+
+**Example:**
+```python
+events = await db.get_tracked_events("cal-xxxxx")
+for event in events:
+    print(f"{event['name']} - {event['start_at']}")
+```
+
+### record_event_sent
+
+Record that an event was sent to Discord.
+
+```python
+async def record_event_sent(
+    self,
+    event_api_id: str,
+    guild_id: int,
+    channel_id: int
+)
+```
+
+**Example:**
+```python
+await db.record_event_sent("evt-xxxxx", 123456789, 987654321)
+```
+
+### was_event_recently_sent
+
+Check if event was recently sent.
+
+```python
+async def was_event_recently_sent(
+    self,
+    event_api_id: str,
+    guild_id: int,
+    hours: int = 24
+) -> bool
+```
+
+**Example:**
+```python
+if await db.was_event_recently_sent("evt-xxxxx", guild_id):
+    print("Event already sent recently")
+```
+
+### get_calendar_stats
+
+Get database statistics.
+
+```python
+async def get_calendar_stats(self) -> Dict[str, Any]
+```
+
+**Returns:**
+```python
+{
+    "total_events": int,
+    "total_calendars": int,
+    "total_sends": int,
+    "calendar_stats": [
+        {"calendar_api_id": "cal-xxxxx", "event_count": 10},
+        ...
+    ],
+}
+```
+
+### clear_event_database
+
+Clear event data from database.
+
+```python
+async def clear_event_database(
+    self,
+    calendar_api_ids: Optional[List[str]] = None
+) -> Dict[str, Any]
+```
+
+**Parameters:**
+- `calendar_api_ids` - Specific calendars to clear, or `None` for all
+
+**Example:**
+```python
+# Clear specific calendar
+result = await db.clear_event_database(["cal-xxxxx"])
+
+# Clear all
+result = await db.clear_event_database()
+```
+
+### cleanup_old_history
+
+Remove old history records.
+
+```python
+async def cleanup_old_history(self, days: int = 30) -> int
+```
+
+**Returns:** Number of records deleted
+
+**Example:**
+```python
+deleted = await db.cleanup_old_history(days=7)
+print(f"Cleaned {deleted} old records")
+```
+
+## Thread Safety
+
+The database uses an asyncio lock for thread-safe operations:
+
+```python
+async with self._lock:
+    # Database operations
+```
+
+## Error Handling
+
+All methods handle exceptions internally and return safe defaults:
+
+```python
+result = await db.upsert_events(events, calendar_id)
+# Always returns valid dict, never raises
+```
+
+## Related
+
+- [API Client](./client) - Fetch events from Luma
+- [Data Models](./models) - Event data structures

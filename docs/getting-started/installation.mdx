@@ -1,0 +1,97 @@
+---
+title: Installation
+description: How to install the Luma Events cog
+---
+
+# Installation
+
+## Requirements
+
+- **Red-DiscordBot** 3.5.0 or higher
+- **Python** 3.8 or higher
+- **aiohttp** >= 3.8.0
+- **pydantic** >= 1.10.0
+
+### Optional Dependencies
+
+For Google Calendar integration:
+- **google-api-python-client**
+- **google-auth**
+
+```bash
+pip install google-api-python-client google-auth
+```
+
+## Installation Methods
+
+### Method 1: Red's Downloader (Recommended)
+
+```bash
+# Add the repository
+[p]repo add luma-redbot https://github.com/yourusername/luma-redbot
+
+# Install the cog
+[p]cog install luma-redbot luma
+
+# Load the cog
+[p]load luma
+```
+
+### Method 2: Manual Installation
+
+1. Clone or download the repository:
+   ```bash
+   git clone https://github.com/yourusername/luma-redbot.git
+   ```
+
+2. Copy the `luma` folder to your Red's cogs directory:
+   ```bash
+   cp -r luma-redbot/luma /path/to/your/red/cogs/
+   ```
+
+3. Load the cog:
+   ```bash
+   [p]load luma
+   ```
+
+## Verifying Installation
+
+After loading, verify the cog is working:
+
+```bash
+[p]luma
+```
+
+You should see a help embed showing available commands.
+
+## Troubleshooting
+
+### Import Errors
+
+If you see import errors, ensure all dependencies are installed:
+
+```bash
+pip install aiohttp pydantic
+```
+
+### Permission Errors
+
+Make sure the bot has the following permissions in your server:
+- Send Messages
+- Embed Links
+- Read Message History
+
+### Cog Not Loading
+
+Check Red's logs for detailed error messages:
+
+```bash
+[p]log tail
+```
+
+Look for entries containing `red.luma`.
+
+## Next Steps
+
+- [Setup Guide](./setup) - Configure your first subscription
+- [Google Calendar Setup](../configuration/google-calendar) - Enable aggregate calendar

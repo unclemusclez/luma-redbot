@@ -1,0 +1,96 @@
+---
+title: Subscriptions
+description: Manage Luma calendar subscriptions
+---
+
+# Subscription Commands
+
+Manage your Luma calendar subscriptions. Each subscription represents a calendar that events will be fetched from.
+
+## View Subscriptions
+
+```bash
+[p]luma subscriptions
+```
+
+Shows all configured subscriptions with their API ID and slug.
+
+## Add Subscription
+
+```bash
+[p]luma subscriptions add <api_id>
+```
+
+Adds a new Luma calendar subscription. The bot automatically fetches the calendar's name and slug.
+
+**Parameters:**
+- `api_id` - The Luma calendar API ID (e.g., `cal-xxxxx`) or slug (e.g., `genai-ny`)
+
+**Example:**
+```bash
+[p]luma subscriptions add cal-kcWhMbIs2X0Y2Xb
+[p]luma subscriptions add genai-ny
+```
+
+**Auto-syncs to Google Calendar** if aggregate calendar is configured.
+
+## Remove Subscription
+
+```bash
+[p]luma subscriptions remove <api_id>
+```
+
+Removes a subscription from the bot.
+
+**Example:**
+```bash
+[p]luma subscriptions remove cal-kcWhMbIs2X0Y2Xb
+```
+
+## View Calendar Links
+
+```bash
+[p]luma subscriptions links
+```
+
+Shows ICS feed URLs and Google Calendar subscribe links for all subscriptions.
+
+**Example Output:**
+```
+📅 Calendar Subscribe Links
+
+Bond AI - New York
+ICS Feed: https://api2.luma.com/ics/get?entity=calendar&id=cal-xxxxx
+[Add to Google Calendar](link)
+
+Hathora Hub
+ICS Feed: https://api2.luma.com/ics/get?entity=calendar&id=cal-yyyyy
+[Add to Google Calendar](link)
+```
+
+## Finding Calendar API IDs
+
+### Method 1: From Luma URL
+1. Go to your Luma calendar (e.g., `https://lu.ma/genai-ny`)
+2. The slug is `genai-ny` - you can use this directly
+
+### Method 2: Browser DevTools
+1. Open Luma calendar page
+2. Open DevTools (F12) → Network tab
+3. Refresh the page
+4. Find API requests to `lu.ma`
+5. Look for `api_id` in responses (format: `cal-xxxxx`)
+
+## Command Reference
+
+| Command | Description |
+|---------|-------------|
+| `[p]luma subscriptions` | List all subscriptions |
+| `[p]luma subscriptions add <id>` | Add new subscription |
+| `[p]luma subscriptions remove <id>` | Remove subscription |
+| `[p]luma subscriptions links` | Show calendar links |
+
+## Related
+
+- [Channel Groups](./groups) - Organize event displays
+- [Google Calendar](../configuration/google-calendar) - Aggregate calendar setup

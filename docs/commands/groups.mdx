@@ -1,0 +1,153 @@
+---
+title: Channel Groups
+description: Organize event displays across Discord channels
+---
+
+# Channel Group Commands
+
+Channel groups determine where and how events are displayed in Discord.
+
+## Overview
+
+Channel groups allow you to:
+- Display events in specific Discord channels
+- Limit the number of events shown
+- Organize different calendars into different channels
+
+## View Groups
+
+```bash
+[p]luma groups
+```
+
+Shows all configured channel groups with their settings.
+
+## Create Group
+
+```bash
+[p]luma groups create <name> <channel> [max_events] [timezone]
+```
+
+Creates a new channel group for displaying events.
+
+**Parameters:**
+- `name` - Group name (use quotes for spaces)
+- `channel` - Discord channel to display events
+- `max_events` - Maximum events to show (default: 10)
+- `timezone` - Optional timezone for event times
+
+**Example:**
+```bash
+[p]luma groups create "Weekly Events" #events 15
+[p]luma groups create "NYC Events" #nyc-events 10 "America/New_York"
+```
+
+## Add Subscription to Group
+
+```bash
+[p]luma groups addsub <group_name> <subscription_id>
+```
+
+Links a subscription to a channel group. Events from this subscription will be displayed in the group's channel.
+
+**Example:**
+```bash
+[p]luma groups addsub "Weekly Events" cal-xxxxx
+[p]luma groups addsub "Weekly Events" genai-ny
+```
+
+## Remove Subscription from Group
+
+```bash
+[p]luma groups removesub <group_name> <subscription_id>
+```
+
+Removes a subscription from a channel group.
+
+**Example:**
+```bash
+[p]luma groups removesub "Weekly Events" cal-xxxxx
+```
+
+## Delete Group
+
+```bash
+[p]luma groups delete <group_name>
+```
+
+Deletes a channel group. Does not affect subscriptions.
+
+**Example:**
+```bash
+[p]luma groups delete "Weekly Events"
+```
+
+## Edit Group
+
+### Change Name
+```bash
+[p]luma groups edit <group_name> name <new_name>
+```
+
+### Change Channel
+```bash
+[p]luma groups edit <group_name> channel #new-channel
+```
+
+### Change Max Events
+```bash
+[p]luma groups edit <group_name> max 20
+```
+
+### Change Timezone
+```bash
+[p]luma groups edit <group_name> timezone "America/Los_Angeles"
+```
+
+## Set Group Timezone
+
+```bash
+[p]luma groups timezone <group_name> <timezone>
+```
+
+Sets the timezone for displaying event times in this group.
+
+**Example:**
+```bash
+[p]luma groups timezone "NYC Events" "America/New_York"
+[p]luma groups timezone "London Events" "Europe/London"
+```
+
+## Command Reference
+
+| Command | Description |
+|---------|-------------|
+| `[p]luma groups` | List all groups |
+| `[p]luma groups create <name> <channel> [max]` | Create group |
+| `[p]luma groups addsub <group> <sub>` | Add subscription |
+| `[p]luma groups removesub <group> <sub>` | Remove subscription |
+| `[p]luma groups delete <name>` | Delete group |
+| `[p]luma groups edit <group> name <new>` | Rename group |
+| `[p]luma groups edit <group> channel <ch>` | Change channel |
+| `[p]luma groups edit <group> max <n>` | Change max events |
+| `[p]luma groups edit <group> timezone <tz>` | Change timezone |
+| `[p]luma groups timezone <group> <tz>` | Set timezone |
+
+## Example Setup
+
+```bash
+# Create a group for tech events
+[p]luma groups create "Tech Events" #tech-calendar 15 "America/New_York"
+
+# Add multiple subscriptions
+[p]luma groups addsub "Tech Events" cal-xxxxx
+[p]luma groups addsub "Tech Events" cal-yyyyy
+
+# Verify setup
+[p]luma groups
+```
+
+## Related
+
+- [Subscriptions](./subscriptions) - Manage subscriptions
+- [Events](./events) - View events

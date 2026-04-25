@@ -1,0 +1,35 @@
+{
+  "sidebar": [
+    {
+      "label": "Getting Started",
+      "items": [
+        "getting-started/installation",
+        "getting-started/setup"
+      ]
+    },
+    {
+      "label": "Commands",
+      "items": [
+        "commands/subscriptions",
+        "commands/aggregate",
+        "commands/groups",
+        "commands/events"
+      ]
+    },
+    {
+      "label": "Configuration",
+      "items": [
+        "configuration/google-calendar",
+        "configuration/config"
+      ]
+    },
+    {
+      "label": "API Reference",
+      "items": [
+        "api/client",
+        "api/database",
+        "api/models"
+      ]
+    }
+  ]
+}

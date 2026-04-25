@@ -1,0 +1,183 @@
+---
+title: Google Calendar Setup
+description: Configure aggregate Google Calendar integration
+---
+
+# Google Calendar Setup
+
+This guide walks you through setting up Google Calendar integration for aggregating all your Luma subscriptions.
+
+## Overview
+
+The aggregate calendar feature:
+- Syncs all Luma subscriptions to one Google Calendar
+- Uses ICS feeds (auto-updating)
+- Provides a single view of all events
+
+## Prerequisites
+
+- Google account
+- Access to Google Cloud Console
+- Service account JSON credentials
+
+## Step 1: Create Google Cloud Project
+
+1. Go to [Google Cloud Console](https://console.cloud.google.com)
+2. Click the project dropdown → "New Project"
+3. Name it (e.g., "luma-bot") → Create
+
+## Step 2: Enable Calendar API
+
+1. In the console, go to **APIs & Services** → **Library**
+2. Search for "Google Calendar API"
+3. Click → **Enable**
+
+## Step 3: Create Service Account
+
+1. Go to **APIs & Services** → **Credentials**
+2. Click **Create Credentials** → **Service Account**
+3. Fill in:
+   - Name: `luma-bot` (or your preferred name)
+   - Description: "Luma Events Discord Bot"
+4. Click **Create and Continue**
+5. Skip the optional steps → **Done**
+
+## Step 4: Download Credentials
+
+1. Click on the service account you just created
+2. Go to the **Keys** tab
+3. Click **Add Key** → **Create new key**
+4. Select **JSON** → **Create**
+5. The JSON file downloads automatically
+6. **Save it securely!** (Don't commit to git)
+
+## Step 5: Configure Bot
+
+Upload the credentials to the bot:
+
+```bash
+[p]luma aggregate credentials /path/to/your-credentials.json
+```
+
+Output:
+```
+✅ Google Credentials Configured
+
+Service Account: `luma-bot@project-id.iam.gserviceaccount.com`
+Project ID: `project-id`
+
+Next Step
+Share your Google Calendar with:
+`luma-bot@project-id.iam.gserviceaccount.com`
+
+Give it 'Make changes to events' permission.
+```
+
+## Step 6: Share Your Calendar
+
+1. Open [Google Calendar](https://calendar.google.com)
+2. Go to **Settings** → Select your calendar
+3. Scroll to **"Share with specific people"**
+4. Click **+ Add people**
+5. Enter the service account email (from step 5)
+6. Permission: **"Make changes to events"**
+7. Click **Send**
+
+## Step 7: Configure Aggregate Calendar
+
+Get your calendar ID:
+1. In Google Calendar settings
+2. Scroll to **"Integrate calendar"**
+3. Copy the **Calendar ID** (e.g., `abc123@group.calendar.google.com`)
+
+Configure in bot:
+```bash
+[p]luma aggregate setup abc123@group.calendar.google.com
+```
+
+## Step 8: Sync Subscriptions
+
+Sync all existing subscriptions:
+```bash
+[p]luma aggregate sync
+```
+
+Output:
+```
+📅 Sync Complete
+
+Results
+✅ 5 synced
+🔁 2 already existed
+❌ 0 failed
+
+View Calendar
+[Open in Google Calendar](link)
+```
+
+## API Scopes Used
+
+The bot uses minimal required scopes:
+
+| Scope | Purpose |
+|-------|---------|
+| `calendar.calendarlist` | Add/remove calendars from list |
+
+This scope only allows:
+- Viewing your calendar list
+- Adding/removing external calendars (ICS feeds)
+
+**No access to**:
+- Creating/editing events
+- Reading event details
+- Modifying calendar settings
+
+## Troubleshooting
+
+### "Credentials not configured"
+
+```bash
+[p]luma aggregate credentials /path/to/file.json
+```
+
+### "Connection failed"
+
+1. Verify service account email
+2. Check calendar sharing permissions
+3. Ensure Google Calendar API is enabled
+
+### "Calendar not found"
+
+1. Verify calendar ID format
+2. Check the calendar is shared with service account
+
+### "Permission denied"
+
+Make sure the service account has "Make changes to events" permission on the calendar.
+
+## Testing
+
+Test the connection:
+
+```bash
+[p]luma aggregate test
+```
+
+Expected output:
+```
+✅ Google Calendar Connection OK
+
+Service Account: `luma-bot@project-id.iam.gserviceaccount.com`
+Calendars Accessible: X calendars
+```
+
+## Security Notes
+
+- **Keep credentials secure** - Don't share or commit the JSON file
+- **Minimal permissions** - Service account only has calendar list access
+- **Revocable** - You can revoke access anytime in Google Calendar settings
+
+## Related
+
+- [Aggregate Commands](../commands/aggregate) - Command reference
+- [Subscriptions](../commands/subscriptions) - Add subscriptions

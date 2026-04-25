@@ -1,0 +1,126 @@
+---
+title: Aggregate Calendar
+description: Aggregate all subscriptions into a single Google Calendar
+---
+
+# Aggregate Calendar Commands
+
+Manage the aggregate Google Calendar that combines all your Luma subscriptions.
+
+## Overview
+
+The aggregate calendar feature allows you to:
+- Sync all Luma subscriptions to a single Google Calendar
+- Auto-sync when adding new subscriptions
+- View all events in one place
+
+## Setup
+
+### Step 1: Configure Credentials
+
+```bash
+[p]luma aggregate credentials <path_to_json>
+```
+
+Upload your Google Service Account credentials JSON file. This is a **bot owner only** command.
+
+**Example:**
+```bash
+[p]luma aggregate credentials /path/to/service-account.json
+```
+
+### Step 2: Set Up Calendar
+
+```bash
+[p]luma aggregate setup <calendar_id>
+```
+
+Configure which Google Calendar to use for aggregation.
+
+**Finding your Calendar ID:**
+1. Open Google Calendar
+2. Go to Settings → Select your calendar
+3. Scroll to "Integrate calendar"
+4. Copy the "Calendar ID" (looks like `abc123@group.calendar.google.com`)
+
+**Example:**
+```bash
+[p]luma aggregate setup my-calendar@group.calendar.google.com
+```
+
+### Step 3: Share Calendar
+
+Share your Google Calendar with the service account email:
+1. Open Google Calendar settings
+2. Select your calendar
+3. "Share with specific people" → Add
+4. Enter the service account email (from credentials JSON)
+5. Permission: "Make changes to events"
+
+### Step 4: Sync Subscriptions
+
+```bash
+[p]luma aggregate sync
+```
+
+Adds all subscription ICS feeds to the aggregate calendar.
+
+## Commands Reference
+
+| Command | Description | Permission |
+|---------|-------------|------------|
+| `[p]luma aggregate` | View aggregate status | Admin |
+| `[p]luma aggregate setup <id>` | Configure calendar | Admin |
+| `[p]luma aggregate credentials <path>` | Upload Google credentials | Bot Owner |
+| `[p]luma aggregate sync` | Sync all subscriptions | Admin |
+| `[p]luma aggregate test` | Test Google connection | Admin |
+| `[p]luma aggregate link` | Get calendar view link | Everyone |
+| `[p]luma aggregate clear` | Remove configuration | Admin |
+
+## Auto-Sync
+
+When you add a new subscription with aggregate calendar configured:
+
+```bash
+[p]luma subscriptions add cal-xxxxx
+```
+
+The bot automatically:
+1. Adds the subscription
+2. Syncs the ICS feed to Google Calendar
+3. Shows sync status in the response
+
+## Testing
+
+Test your Google Calendar connection:
+
+```bash
+[p]luma aggregate test
+```
+
+Output:
+```
+✅ Google Calendar Connection OK
+
+Service Account: `luma-bot@project.iam.gserviceaccount.com`
+Calendars Accessible: 5 calendars
+```
+
+## Troubleshooting
+
+### "No credentials configured"
+Run `[p]luma aggregate credentials <path>` with your service account JSON.
+
+### "Connection failed"
+- Verify the service account has access to the calendar
+- Check that the calendar ID is correct
+- Ensure Google Calendar API is enabled
+
+### "Calendar not found"
+- Verify the calendar ID format (should end with `@group.calendar.google.com` or `@gmail.com`)
+- Make sure the service account has been added to the calendar's sharing settings
+
+## Related
+
+- [Google Calendar Setup](../configuration/google-calendar) - Detailed setup guide
+- [Subscriptions](./subscriptions) - Manage subscriptions

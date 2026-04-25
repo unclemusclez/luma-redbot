@@ -1,0 +1,76 @@
+---
+title: Luma Events Plugin
+description: A comprehensive Red-DiscordBot cog for managing Luma calendar subscriptions
+---
+
+# Luma Events Plugin
+
+A comprehensive Red-DiscordBot cog for integrating with Luma's public API to fetch and display calendar events across Discord channels.
+
+## Features
+
+- **Real-time Event Sync** - Automatically fetches and displays events from Luma calendars
+- **Channel Groups** - Organize events by Discord channels with custom limits
+- **Google Calendar Integration** - Aggregate all subscriptions into one Google Calendar
+- **Paginated Event Lists** - Clean, paginated display of upcoming events
+- **New Event Notifications** - Automatic Discord notifications when new events are added
+- **Timezone Support** - Proper timezone conversion and display
+
+## Quick Start
+
+```bash
+# Install the cog
+[p]cog install luma-redbot luma
+
+# Load the cog
+[p]load luma
+
+# Add a subscription
+[p]luma subscriptions add cal-xxxxx
+
+# View upcoming events
+[p]luma events
+```
+
+## Architecture
+
+```
+┌─────────────────┐     ┌──────────────────┐     ┌─────────────────┐
+│   Luma API      │────▶│   Luma Bot       │────▶│  Discord        │
+│   (Events)      │     │   (Processing)   │     │  (Channels)     │
+└─────────────────┘     └──────────────────┘     └─────────────────┘
+                               │
+                               ▼
+                        ┌──────────────────┐
+                        │  Google Calendar │
+                        │  (Aggregate)     │
+                        └──────────────────┘
+```
+
+## Documentation Sections
+
+import { Card } from '@site/src/components/Card';
+
+<Card
+  title="Getting Started"
+  description="Installation, setup, and configuration"
+  href="/docs/getting-started/installation"
+/>
+
+<Card
+  title="Commands"
+  description="Full command reference for all features"
+  href="/docs/commands/subscriptions"
+/>
+
+<Card
+  title="Google Calendar"
+  description="Set up aggregate calendar integration"
+  href="/docs/configuration/google-calendar"
+/>
+
+<Card
+  title="API Reference"
+  description="Technical documentation for developers"
+  href="/docs/api/client"
+/>

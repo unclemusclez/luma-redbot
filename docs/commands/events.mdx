@@ -1,0 +1,153 @@
+---
+title: Events
+description: View and manage event displays
+---
+
+# Events Commands
+
+View upcoming events and trigger manual updates.
+
+## View Events
+
+```bash
+[p]luma events
+```
+
+Displays upcoming events from all subscriptions in paginated format.
+
+**Features:**
+- Paginated (10 events per page)
+- Shows only future events
+- Filters to next 30 days
+- Includes event links and times
+
+**Example Output:**
+```
+📅 Upcoming Events
+Here's what we have coming up:
+
+Bond AI - New York
+from [genai-ny](https://lu.ma/genai-ny)
+
+📅 Saturday, April 19, 2026
+🕐 Local Time: 11:00 AM - 01:00 PM EDT
+🔗 View Event
+
+AI Walk in the Park
+from [genai-ny](https://lu.ma/genai-ny)
+
+📅 Sunday, April 20, 2026
+🕐 Local Time: 02:00 PM - 04:00 PM EDT
+🔗 View Event
+```
+
+## Manual Update
+
+```bash
+[p]luma update
+```
+
+Triggers a manual check for new events and sends notifications.
+
+**Example:**
+```bash
+[p]luma update
+```
+
+Output:
+```
+🔄 Checking for new events...
+Found and sent 3 new event(s) to channels!
+```
+
+## Force Update
+
+```bash
+[p]luma update force
+```
+
+Sends ALL recent events regardless of whether they're new. Useful for:
+- Testing message formatting
+- Re-populating channels
+- Debugging
+
+**Example:**
+```bash
+[p]luma update force
+```
+
+Output:
+```
+🔄 Force mode: Sending ALL recent events to channels...
+Force mode: Sent 15 event(s) to channels!
+```
+
+## Test Subscription
+
+```bash
+[p]luma test <api_id>
+```
+
+Tests a specific subscription by fetching and displaying its events.
+
+**Example:**
+```bash
+[p]luma test cal-xxxxx
+[p]luma test genai-ny
+```
+
+## View Schedule
+
+```bash
+[p]luma schedule
+```
+
+Shows the current update schedule and timing information.
+
+**Example Output:**
+```
+📅 Update Schedule
+
+Status: ✅ Enabled
+Interval: Every 6 hours
+Last Update: 2026-04-18 18:00:00 UTC
+Next Update: 2026-04-19 00:00:00 UTC
+
+Use [p]luma update for immediate updates.
+```
+
+## Command Reference
+
+| Command | Description |
+|---------|-------------|
+| `[p]luma events` | View upcoming events (paginated) |
+| `[p]luma update` | Check for new events |
+| `[p]luma update force` | Send all recent events |
+| `[p]luma test <id>` | Test a subscription |
+| `[p]luma schedule` | View update schedule |
+
+## Event Filtering
+
+Events are automatically filtered:
+- **Past events excluded** - Only future events shown
+- **30-day window** - Events within next 30 days
+- **Per-group limits** - Respects `max_events` setting
+
+## New Event Notifications
+
+When new events are detected:
+1. Bot sends individual embed messages to configured channels
+2. Each event shows:
+   - Event name and calendar
+   - Date and local time
+   - Event link
+
+Notifications are sent during:
+- Background updates (automatic)
+- Manual `[p]luma update` command
+- NOT during `[p]luma update force`
+
+## Related
+
+- [Channel Groups](./groups) - Configure event displays
+- [Subscriptions](./subscriptions) - Manage subscriptions

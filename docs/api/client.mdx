@@ -1,0 +1,179 @@
+---
+title: API Client
+description: Luma API client documentation
+---
+
+# API Client
+
+The `LumaAPIClient` class handles all communication with Luma's public API.
+
+## Module
+
+```python
+from luma.core.api_client import LumaAPIClient
+```
+
+## Class: LumaAPIClient
+
+Async context manager for making Luma API requests.
+
+### Usage
+
+```python
+async with LumaAPIClient() as client:
+    events = await client.get_calendar_events("cal-xxxxx")
+    calendar = await client.get_calendar_info("genai-ny")
+```
+
+## Methods
+
+### get_calendar_events
+
+Fetch events from a calendar.
+
+```python
+async def get_calendar_events(
+    self,
+    calendar_identifier: str,
+    limit: int = 20,
+    after: Optional[str] = None,
+    before: Optional[str] = None,
+) -> List[Event]
+```
+
+**Parameters:**
+- `calendar_identifier` - API ID (e.g., `cal-xxxxx`) or slug (e.g., `genai-ny`)
+- `limit` - Maximum events to fetch (default: 20)
+- `after` - ISO datetime string for filtering
+- `before` - ISO datetime string for filtering
+
+**Returns:** List of `Event` objects
+
+**Example:**
+```python
+async with LumaAPIClient() as client:
+    events = await client.get_calendar_events("genai-ny", limit=50)
+    for event in events:
+        print(f"{event.name} - {event.start_at}")
+```
+
+### get_calendar_info
+
+Fetch calendar metadata by slug.
+
+```python
+async def get_calendar_info(self, slug: str) -> Optional[Dict[str, Any]]
+```
+
+**Parameters:**
+- `slug` - Calendar slug (e.g., `genai-ny`)
+
+**Returns:** Dict with calendar info or `None`
+
+**Example:**
+```python
+async with LumaAPIClient() as client:
+    info = await client.get_calendar_info("genai-ny")
+    print(info["api_id"])  # cal-xxxxx
+    print(info["name"])    # Bond AI - New York
+```
+
+### get_calendar_metadata_by_api_id
+
+Fetch calendar metadata by API ID.
+
+```python
+async def get_calendar_metadata_by_api_id(self, api_id: str) -> Optional[Dict[str, Any]]
+```
+
+**Parameters:**
+- `api_id` - Calendar API ID (e.g., `cal-xxxxx`)
+
+**Returns:** Dict with calendar metadata or `None`
+
+**Example:**
+```python
+async with LumaAPIClient() as client:
+    meta = await client.get_calendar_metadata_by_api_id("cal-xxxxx")
+    print(meta["slug"])  # genai-ny
+    print(meta["name"])  # Bond AI - New York
+```
+
+## Error Handling
+
+### Exception Classes
+
+```python
+from luma.core.api_client import (
+    LumaAPIError,        # Base exception
+    LumaAPIRateLimitError,  # Rate limited
+    LumaAPINotFoundError,   # Resource not found
+    LumaAPITimeoutError,    # Request timeout
+)
+```
+
+### Example
+
+```python
+from luma.core.api_client import LumaAPIClient, LumaAPIError, LumaAPINotFoundError
+
+try:
+    async with LumaAPIClient() as client:
+        events = await client.get_calendar_events("invalid-slug")
+except LumaAPINotFoundError:
+    print("Calendar not found")
+except LumaAPIError as e:
+    print(f"API error: {e}")
+```
+
+## Rate Limiting
+
+The client automatically handles rate limiting:
+- Adds delays between requests
+- Retries on rate limit responses
+- Respects `Retry-After` headers
+
+## Caching
+
+API responses are cached:
+- **TTL:** 5 minutes
+- **Automatic cleanup** of expired entries
+- Cache key based on endpoint and parameters
+
+### Clear Cache
+
+```python
+async with LumaAPIClient() as client:
+    client.clear_cache()
+```
+
+## Configuration
+
+### Base URL
+
+Default: `https://api.lu.ma`
+
+### Timeout
+
+Default: 30 seconds
+
+## Data Models
+
+Events are returned as `Event` objects from the models module.
+
+```python
+from luma.models.calendar_get import Event
+
+event: Event
+print(event.api_id)       # cal-xxxxx
+print(event.name)         # Event Name
+print(event.start_at)     # 2026-04-20T18:00:00Z
+print(event.timezone)     # America/New_York
+print(event.url)          # evt-xxxxx
+print(event.calendar.slug)  # genai-ny
+```
+
+## Related
+
+- [Database](./database) - Event storage
+- [Data Models](./models) - Pydantic models

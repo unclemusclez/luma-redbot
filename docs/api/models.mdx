@@ -1,0 +1,188 @@
+---
+title: Data Models
+description: Pydantic models for data validation
+---
+
+# Data Models
+
+Pydantic models for Luma API data structures.
+
+## Modules
+
+```python
+from luma.models.calendar_get import Event, Calendar, Host
+from luma.models.data_models import Subscription, ChannelGroup
+```
+
+## Calendar Models
+
+### Event
+
+Represents a Luma event.
+
+```python
+class Event(BaseModel):
+    api_id: str                    # Unique identifier (evt-xxxxx)
+    name: str                      # Event name
+    start_at: str                  # Start datetime (ISO format)
+    end_at: Optional[str]          # End datetime (ISO format)
+    timezone: Optional[str]        # Event timezone
+    url: str                       # URL slug
+    event_type: Optional[str]      # Event type
+    description: Optional[str]     # Event description
+    cover_image_url: Optional[str] # Cover image
+    calendar: Optional[Calendar]   # Parent calendar
+    hosts: Optional[List[Host]]    # Event hosts
+    tags: Optional[List[Tag]]      # Event tags
+```
+
+**Example:**
+```python
+event = Event(
+    api_id="evt-xxxxx",
+    name="AI Meetup NYC",
+    start_at="2026-04-20T18:00:00Z",
+    end_at="2026-04-20T21:00:00Z",
+    timezone="America/New_York",
+    url="evt-xxxxx",
+)
+
+print(event.name)       # "AI Meetup NYC"
+print(event.start_at)   # "2026-04-20T18:00:00Z"
+```
+
+### Calendar
+
+Represents a Luma calendar.
+
+```python
+class Calendar(BaseModel):
+    api_id: str                    # Calendar API ID (cal-xxxxx)
+    name: str                      # Calendar name
+    slug: str                      # URL slug
+    description: Optional[str]     # Calendar description
+    cover_image_url: Optional[str] # Cover image
+```
+
+### Host
+
+Represents an event host.
+
+```python
+class Host(BaseModel):
+    name: str                      # Host name
+    email: Optional[str]           # Host email
+    bio: Optional[str]             # Host bio
+    avatar_url: Optional[str]      # Avatar URL
+```
+
+### Tag
+
+Represents an event tag.
+
+```python
+class Tag(BaseModel):
+    name: str                      # Tag name
+    slug: Optional[str]            # Tag slug
+```
+
+## Configuration Models
+
+### Subscription
+
+Stores Luma calendar subscription info.
+
+```python
+class Subscription:
+    api_id: str                    # Calendar API ID
+    slug: str                      # Calendar slug
+    name: str                      # Friendly name
+    added_by: int                  # Discord user ID
+    added_at: str                  # ISO timestamp
+    
+    def to_dict(self) -> Dict
+    @classmethod
+    def from_dict(cls, data: Dict) -> "Subscription"
+```
+
+**Example:**
+```python
+sub = Subscription(
+    api_id="cal-xxxxx",
+    slug="genai-ny",
+    name="Bond AI - New York",
+    added_by=123456789,
+    added_at="2026-04-18T00:00:00Z",
+)
+
+# Serialize
+data = sub.to_dict()
+
+# Deserialize
+sub = Subscription.from_dict(data)
+```
+
+### ChannelGroup
+
+Manages Discord channel event display.
+
+```python
+class ChannelGroup:
+    name: str                      # Group name
+    channel_id: int                # Discord channel ID
+    subscription_ids: List[str]    # Calendar API IDs
+    max_events: int                # Max events to show
+    created_by: int                # Discord user ID
+    created_at: str                # ISO timestamp
+    timezone: Optional[str]        # Group timezone
+    
+    def to_dict(self) -> Dict
+    @classmethod
+    def from_dict(cls, data: Dict) -> "ChannelGroup"
+```
+
+**Example:**
+```python
+group = ChannelGroup(
+    name="Tech Events",
+    channel_id=987654321,
+    subscription_ids=["cal-xxxxx", "cal-yyyyy"],
+    max_events=15,
+    created_by=123456789,
+    created_at="2026-04-18T00:00:00Z",
+    timezone="America/New_York",
+)
+
+# Add subscription
+group.subscription_ids.append("cal-zzzzz")
+
+# Serialize
+data = group.to_dict()
+```
+
+## Usage with API Client
+
+```python
+from luma.core.api_client import LumaAPIClient
+from luma.models.calendar_get import Event
+
+async with LumaAPIClient() as client:
+    events: List[Event] = await client.get_calendar_events("genai-ny")
+    
+    for event in events:
+        print(f"{event.name}")
+        print(f"  Start: {event.start_at}")
+        print(f"  TZ: {event.timezone}")
+        
+        if event.calendar:
+            print(f"  Calendar: {event.calendar.name}")
+        
+        if event.hosts:
+            for host in event.hosts:
+                print(f"  Host: {host.name}")
+```
+
+## Related
+
+- [API Client](./client) - Fetch data from Luma
+- [Database](./database) - Store and track events

@@ -1,0 +1,133 @@
+---
+title: Configuration Reference
+description: Complete configuration options
+---
+
+# Configuration Reference
+
+## Global Configuration
+
+Stored globally across all guilds.
+
+| Setting | Type | Default | Description |
+|---------|------|---------|-------------|
+| `update_interval_hours` | int | 24 | Hours between automatic updates |
+| `last_update` | str | null | ISO timestamp of last update |
+| `google_credentials` | dict | null | Google service account credentials |
+
+### Commands
+
+```bash
+# Set update interval
+[p]luma config interval 6
+
+# Enable/disable updates
+[p]luma config enable
+[p]luma config disable
+
+# View current config
+[p]luma config
+```
+
+## Guild Configuration
+
+Stored per Discord server.
+
+| Setting | Type | Default | Description |
+|---------|------|---------|-------------|
+| `subscriptions` | dict | {} | Calendar subscriptions |
+| `channel_groups` | dict | {} | Channel display groups |
+| `enabled` | bool | true | Auto-updates enabled |
+| `aggregate_calendar` | dict | null | Google Calendar config |
+
+### Subscription Structure
+
+```json
+{
+  "cal-xxxxx": {
+    "api_id": "cal-xxxxx",
+    "slug": "genai-ny",
+    "name": "Bond AI - New York",
+    "added_by": 123456789,
+    "added_at": "2026-04-18T00:00:00Z"
+  }
+}
+```
+
+### Channel Group Structure
+
+```json
+{
+  "Tech Events": {
+    "name": "Tech Events",
+    "channel_id": 987654321,
+    "subscription_ids": ["cal-xxxxx"],
+    "max_events": 15,
+    "created_by": 123456789,
+    "created_at": "2026-04-18T00:00:00Z",
+    "timezone": "America/New_York"
+  }
+}
+```
+
+### Aggregate Calendar Structure
+
+```json
+{
+  "calendar_id": "abc123@group.calendar.google.com",
+  "setup_by": 123456789,
+  "setup_at": "2026-04-18T00:00:00Z",
+  "synced_subscriptions": ["cal-xxxxx"]
+}
+```
+
+## Environment Variables
+
+| Variable | Description |
+|----------|-------------|
+| `GOOGLE_APPLICATION_CREDENTIALS` | Path to Google service account JSON |
+
+## File Locations
+
+### Database
+
+Events are tracked in a SQLite database:
+
+```
+~/.local/share/Red-DiscordBot/data/<cog_id>/luma/luma_events.db
+```
+
+Or fallback locations:
+- `./data/luma_events.db`
+- `~/.luma/luma_events.db`
+
+### Cache
+
+API responses are cached in memory with a 5-minute TTL.
+
+## Resetting Configuration
+
+### Per-Guild Reset
+
+```bash
+[p]luma reset
+```
+
+Clears all guild-specific data:
+- Subscriptions
+- Channel groups
+- Aggregate calendar config
+
+### Database Clear
+
+```bash
+[p]luma database clear
+[p]luma database clear "Group Name"
+```
+
+Clears event tracking data.
+
+## Related
+
+- [Getting Started](../getting-started/setup) - Initial setup
+- [Commands](../commands/subscriptions) - Command reference
